@@ -10,7 +10,7 @@ pipeline {
     }
 
     tools {
-        nodejs "NodeJS-16" // Replace with your Node.js installation name in Jenkins
+        nodejs "NodeJS" // Ensure this matches the configured name in Jenkins
     }
 
     stages {
