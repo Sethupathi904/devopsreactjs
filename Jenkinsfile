@@ -22,13 +22,14 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    docker.build("${IMAGE_NAME}:${env.BUILD_ID}")
-                }
-            }
-        }
+	    stage('Build Docker Image') {
+		    steps {
+			    sh 'whoami'
+			    script {
+				    myimage = docker.build("sethu904/devops:${env.BUILD_ID}")
+			    }
+		    }
+	    }
 
 	    stage("Push Docker Image") {
 		    steps {
