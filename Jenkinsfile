@@ -1,32 +1,16 @@
 pipeline {
-    agent any
-    
-    stages {
-        stage('Checkout') {
+     agent any
+     stages {
+        stage("Build") {
             steps {
-                git branch: 'main', url: 'https://github.com/Sethupathi904/devopsreactjs.git'
+                sh "sudo npm install"
+                sh "sudo npm run build"
             }
         }
-        stage('Build') {
+        stage("Deploy") {
             steps {
-                sh 'npm install'
-                sh 'npm run build'
-            }
-        }
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    docker.build('sethu904/react-demo-app:${env.BUILD_NUMBER}')
-                }
-            }
-        }
-        stage('Push Docker Image to DockerHub') {
-            steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
-                        docker.image("<<sethu904/react-demo-app>>:${env.BUILD_NUMBER}").push('latest')
-                    }
-                }
+                sh "sudo rm -rf /var/www/jenkins-react-app"
+                sh "sudo cp -r ${WORKSPACE}/build/ /var/www/jenkins-react-app/"
             }
         }
     }
