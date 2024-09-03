@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/Sethupathi904/devopsreactjs.git'
+                git branch: 'main', url: 'https://github.com/Sethupathi904/devopsreactjs.git'
             }
         }
         stage('Build') {
