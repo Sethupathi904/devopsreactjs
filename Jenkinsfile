@@ -30,15 +30,18 @@ pipeline {
             }
         }
 
-		stage('Push Docker Image') {
-			steps {
-				script {
-					docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
-						sh 'docker push sethu904/react-app:14'
-					}
-				}
-			}
-		}
+	    stage("Push Docker Image") {
+		    steps {
+			    script {
+				    echo "Push Docker Image"
+				    withCredentials([string(credentialsId: 'dockerhub', variable: 'dockerhub')]) {
+            				sh "docker login -u sethu904 -p ${dockerhub}"
+				    }
+				        myimage.push("${env.BUILD_ID}")
+				    
+			    }
+		    }
+	    }
     }
 
     post {
