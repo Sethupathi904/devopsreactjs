@@ -4,10 +4,13 @@ pipeline {
     environment {
         REPO_URL = 'https://github.com/Sethupathi904/devopsreactjs.git'
         BRANCH = 'main'
-        DOCKERHUB_CREDENTIALS_ID = 'dockerhub' // Replace with your Docker Hub credentials ID in Jenkins
+        DOCKERHUB_CREDENTIALS_ID = 'dockerhub'
         DOCKERHUB_REPO = 'sethu904/devopsreactjs'
         IMAGE_TAG = "${env.BUILD_ID}"
-        NODE_VERSION = '16' // Specify the Node.js version you want to use
+    }
+
+    tools {
+        nodejs "NodeJS-16" // Replace with your Node.js installation name in Jenkins
     }
 
     stages {
@@ -20,16 +23,6 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 git branch: "${BRANCH}", url: "${REPO_URL}"
-            }
-        }
-
-        stage('Install Node.js') {
-            steps {
-                script {
-                    // Install Node.js if it's not already installed
-                    sh "nvm install ${NODE_VERSION}"
-                    sh "nvm use ${NODE_VERSION}"
-                }
             }
         }
 
@@ -72,7 +65,7 @@ pipeline {
 
     post {
         always {
-            cleanWs() // Clean workspace after build
+            cleanWs()
         }
     }
 }
