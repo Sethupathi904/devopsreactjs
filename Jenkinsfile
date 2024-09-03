@@ -26,7 +26,7 @@ pipeline {
 		    steps {
 			    sh 'whoami'
 			    script {
-				    myimage = docker.build("sethu904/devops:${env.BUILD_ID}")
+				    myimage = docker.build("sethu904/reactjs:${env.BUILD_ID}")
 			    }
 		    }
 	    }
