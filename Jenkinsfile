@@ -3,9 +3,11 @@ pipeline {
 
     environment {
         REPO_URL = 'https://github.com/Sethupathi904/devopsreactjs.git'
-        DOCKERHUB_CREDENTIALS_ID = 'dockerhub' // Add your Docker Hub credentials in Jenkins
-        DOCKERHUB_REPO = 'sethu904/react-repo'
+        BRANCH = 'main'
+        DOCKERHUB_CREDENTIALS_ID = 'dockerhub' // Replace with your Docker Hub credentials ID in Jenkins
+        DOCKERHUB_REPO = 'sethu904/devopsreactjs'
         IMAGE_TAG = "${env.BUILD_ID}"
+        NODE_VERSION = '16' // Specify the Node.js version you want to use
     }
 
     stages {
@@ -15,15 +17,25 @@ pipeline {
             }
         }
 
-        stage('Checkout SCM') {
+        stage('Checkout Code') {
             steps {
-                git url: "${REPO_URL}", branch: 'main'
+                git branch: "${BRANCH}", url: "${REPO_URL}"
+            }
+        }
+
+        stage('Install Node.js') {
+            steps {
+                script {
+                    // Install Node.js if it's not already installed
+                    sh "nvm install ${NODE_VERSION}"
+                    sh "nvm use ${NODE_VERSION}"
+                }
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                sh 'npm install --legacy-peer-deps'
             }
         }
 
@@ -44,7 +56,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS_ID}", passwordVariable: 'DOCKERHUB_PASS', usernameVariable: 'DOCKERHUB_USER')]) {
-                    sh 'docker login -u sethu904 -p ${DOCKERHUB_PASS}'
+                    sh 'docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASS}'
                     sh 'docker push ${DOCKERHUB_REPO}:${IMAGE_TAG}'
                 }
             }
