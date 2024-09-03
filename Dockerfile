@@ -9,6 +9,7 @@ RUN npm install
 
 # Copy the source code and build the application
 COPY . .
+ENV NODE_OPTIONS=--openssl-legacy-provider
 RUN npm run build
 
 # Stage 2: Serve the ReactJS application
